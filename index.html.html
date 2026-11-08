@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>¡Al Revés!</title>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1b1035; --bg2:#2a1659; --card:#ffffff12; --line:#ffffff22;
+    --pink:#ff4fa3; --yellow:#ffd23f; --cyan:#3ee6ff; --green:#4dff9a; --red:#ff5c5c;
+    --txt:#fff; --mut:#c9bdf0;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:'Nunito',system-ui,sans-serif;color:var(--txt);
+    background:radial-gradient(circle at 20% 0%,#4b1f9e 0,transparent 55%),
+               radial-gradient(circle at 100% 100%,#9e1f6b 0,transparent 50%),var(--bg);
+    min-height:100%;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .app{max-width:480px;margin:0 auto;padding:18px 18px 40px;min-height:100vh;display:flex;flex-direction:column}
+  h1{font-family:'Bungee',cursive;font-weight:400;margin:0;text-align:center;line-height:1.05}
+  .logo{display:flex;flex-direction:column;align-items:center;gap:2px;margin:14px 0 0}
+  .logo .w1{font-family:'Bungee',cursive;font-size:clamp(26px,8vw,36px);color:var(--yellow);letter-spacing:2px;
+            text-shadow:0 4px 0 #0006}
+  .logo .w2{font-family:'Bungee',cursive;font-size:clamp(46px,16vw,72px);display:inline-block;transform:scaleX(-1);
+            color:var(--pink);text-shadow:0 5px 0 #0006, 0 0 24px #ff4fa388;white-space:nowrap;line-height:1}
+  .logo .w2 .c{color:var(--cyan)}
+  .sub{text-align:center;color:var(--mut);margin:6px 0 22px;font-weight:700}
+  h2{font-family:'Bungee',cursive;font-weight:400;font-size:22px;margin:4px 0 12px;text-align:center}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px;backdrop-filter:blur(6px)}
+  label{display:block;font-weight:800;color:var(--mut);font-size:14px;margin:0 0 6px}
+  input[type=text]{width:100%;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:#0006;color:#fff;font:inherit;font-size:18px;outline:none}
+  input[type=text]:focus{border-color:var(--cyan)}
+  .row{display:flex;gap:10px}
+  .row>*{flex:1}
+  button{font:inherit;font-weight:900;border:0;border-radius:18px;padding:16px;font-size:18px;color:#1b1035;cursor:pointer;
+         background:var(--yellow);box-shadow:0 5px 0 #0005;transition:transform .08s}
+  button:active{transform:translateY(3px);box-shadow:0 2px 0 #0005}
+  button.pink{background:var(--pink);color:#fff}
+  button.cyan{background:var(--cyan)}
+  button.green{background:var(--green)}
+  button.red{background:var(--red);color:#fff}
+  button.ghost{background:#ffffff1c;color:#fff;box-shadow:none;border:1px solid var(--line)}
+  button.small{padding:10px 12px;font-size:15px;border-radius:12px}
+  button:disabled{opacity:.35}
+  .full{width:100%}
+  .mt{margin-top:12px}
+  .center{text-align:center}
+  .mut{color:var(--mut)}
+  .phrase{font-size:26px;font-weight:900;text-align:center;padding:14px 8px;line-height:1.2}
+  .chip{display:inline-block;padding:6px 12px;border-radius:99px;background:#ffffff1f;font-weight:800;font-size:14px}
+  .score{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-bottom:14px}
+  .score div{border-radius:16px;padding:8px 6px;text-align:center;background:#0004;border:2px solid transparent;min-width:0}
+  .score div.on{border-color:var(--yellow)}
+  .score div.gs{border-color:var(--cyan)}
+  .score b{display:block;font-family:'Bungee',cursive;font-size:26px;font-weight:400}
+  .score span{font-weight:800;font-size:13px;color:var(--mut);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .score i{display:block;width:12px;height:12px;border-radius:50%;margin:0 auto 4px}
+  .team-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .team-row .dot{width:14px;height:14px;border-radius:50%;flex:0 0 14px}
+  .team-row input{flex:1}
+  .team-row button{flex:0 0 46px;padding:12px 0}
+  .cats{display:flex;flex-wrap:wrap;gap:8px}
+  .cats button{flex:0 0 auto;padding:10px 14px;font-size:15px;border-radius:99px;background:#ffffff14;color:#fff;box-shadow:none;border:2px solid var(--line)}
+  .cats button.on{background:var(--yellow);color:#1b1035;border-color:var(--yellow)}
+  .catTag{display:block;text-align:center;margin-bottom:4px}
+  .rec{width:170px;height:170px;border-radius:50%;margin:10px auto;display:flex;align-items:center;justify-content:center;flex-direction:column;
+       background:var(--pink);color:#fff;font-size:17px;user-select:none;-webkit-user-select:none;touch-action:none}
+  .rec .ic{font-size:52px;line-height:1}
+  .rec.live{background:var(--red);animation:pulse 1s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 #ff5c5caa}70%{box-shadow:0 0 0 26px #ff5c5c00}100%{box-shadow:0 0 0 0 #ff5c5c00}}
+  canvas{width:100%;height:70px;display:block;border-radius:12px;background:#0004}
+  .hidden{display:none!important}
+  .seg{display:flex;background:#0004;border-radius:14px;padding:4px;gap:4px}
+  .seg button{flex:1;background:transparent;color:#fff;box-shadow:none;padding:10px;font-size:15px;border-radius:10px}
+  .seg button.on{background:var(--cyan);color:#1b1035}
+  .big-ic{font-size:64px;text-align:center;margin:6px 0}
+  .timer{font-family:'Bungee',cursive;font-size:40px;text-align:center}
+  .timer.low{color:var(--red)}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#000c;padding:12px 18px;border-radius:14px;font-weight:800;max-width:90%;text-align:center;z-index:9}
+  #modal{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
+  #modal .card{max-width:420px;background:#2a1659}
+  ol{padding-left:20px;margin:0;line-height:1.6}
+  .note{font-size:13px;color:var(--mut);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<input type="file" id="fileIn" accept="audio/*" class="hidden">
+<div id="modal" class="hidden"></div>
+
+<script>
+const CATS = {
+ facil:{n:"😄 Fáciles", f:["El perro come pan","Mi mamá me ama","Hoy es un gran día","La vaca dice mu","Dame un abrazo",
+   "Te quiero mucho","Hace mucho calor","Mi carro es azul","Pásame la sal","Nos vemos el lunes","Hola cómo estás","Buenas noches",
+   "Tengo mucho sueño","Ya me voy","Qué rico","Me gusta bailar"]},
+ comida:{n:"🍕 Comida", f:["Quiero una pizza grande","Tengo hambre de tacos","No me gusta el brócoli","Las arepas son lo mejor",
+   "El café está caliente","Me encanta el chocolate","La abuela hace sopa","Un helado de fresa","Pan con mantequilla",
+   "La bandeja paisa me encanta","Arroz con pollo","Quiero un jugo de mango","El ajiaco está delicioso","Huevos revueltos con arepa"]},
+ animales:{n:"🐶 Animales", f:["El gato duerme en la cama","Cuidado con el perro","Ese pájaro canta bonito","El elefante es gigante",
+   "La jirafa tiene el cuello largo","Un tiburón en el mar","El mono come banano","La tortuga es muy lenta","El león es el rey de la selva",
+   "Mi perro se llama Max","Las gallinas ponen huevos","Un caballo blanco"]},
+ dichos:{n:"📜 Refranes", f:["Al que madruga Dios lo ayuda","Más vale tarde que nunca","Perro que ladra no muerde",
+   "No hay mal que por bien no venga","Camarón que se duerme se lo lleva la corriente","En boca cerrada no entran moscas",
+   "Más vale pájaro en mano que cien volando","A caballo regalado no se le mira el diente","El que ríe de último ríe mejor",
+   "Ojos que no ven corazón que no siente","Dime con quién andas y te diré quién eres","Cría cuervos y te sacarán los ojos"]},
+ colombia:{n:"🇨🇴 Bien colombiano", f:["Qué pena contigo","Ya se fue la luz","Hágale pues","Qué chimba de parche","Ese man es muy bacano",
+   "Me regala un tintico","No dar papaya","Uy qué boleta","Vamos a rumbear","Está haciendo un frío tenaz","Listo parcero",
+   "Eso está muy berraco","Me voy a echar una siesta","Pilas con eso"]},
+ pelis:{n:"🎬 Películas", f:["El rey león","Harry Potter","La guerra de las galaxias","Buscando a Nemo","El hombre araña",
+   "Toy Story","Los vengadores","El señor de los anillos","Volver al futuro","Rápido y furioso","Encanto","Shrek","Jurassic Park"]},
+ deportes:{n:"⚽ Deportes", f:["El fútbol es mi vida","Gol de Colombia","Tiro de esquina","Penalti en el último minuto",
+   "Vamos a montar bicicleta","El árbitro está ciego","Juguemos baloncesto","Me gusta nadar","Tarjeta roja","Campeones del mundo"]},
+ locas:{n:"🤪 Locuras", f:["La luna es de queso","Soy el rey del mundo","Me gané la lotería","Quiero ser astronauta",
+   "Mi abuela maneja un cohete","Un pingüino en bicicleta","Las vacas vuelan los martes","El dinosaurio usa pijama",
+   "Mi tía es una sirena","Hay un fantasma en la nevera","Mi perro habla inglés","Los zapatos me hablan"]},
+ trabas:{n:"👅 Trabalenguas", f:["Tres tristes tigres","Pablito clavó un clavito","El perro de San Roque no tiene rabo",
+   "Pepe pecas pica papas","Erre con erre cigarro","Como poco coco como poco coco compro","Me han dicho que has dicho un dicho"]}
+};
+const COLORS=["#ffd23f","#ff4fa3","#3ee6ff","#4dff9a","#b98cff","#ff9a3c"];
+
+const S = {
+  teams:["Equipo 1","Equipo 2"], score:[0,0], turn:0, goal:10, timeLimit:60, cats:Object.keys(CATS),
+  phrase:"", cat:"", rawBuf:null, revBuf:null, imitBuf:null, rate:1, listens:0
+};
+function randPhrase(){
+  const pool=[]; S.cats.forEach(k=>CATS[k].f.forEach(f=>pool.push([k,f])));
+  let p; do{ p=pool[Math.floor(Math.random()*pool.length)]; }while(pool.length>1 && p[1]===S.phrase);
+  S.cat=p[0]; S.phrase=p[1];
+}
+let ctx=null, stream=null, recorder=null, chunks=[], curSrc=null, timerId=null;
+
+const $ = s=>document.querySelector(s);
+const app = $("#app");
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+function ac(){ if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state==="suspended") ctx.resume(); return ctx; }
+function stopAudio(){ try{curSrc&&curSrc.stop()}catch(e){} curSrc=null; }
+function guesser(){ return (S.turn+1)%S.teams.length; }
+
+/* ---------- audio helpers ---------- */
+function trim(buf){
+  const d=buf.getChannelData(0), th=0.02; let a=0,b=d.length-1;
+  while(a<d.length && Math.abs(d[a])<th) a++;
+  while(b>a && Math.abs(d[b])<th) b--;
+  const pad=Math.floor(buf.sampleRate*0.08);
+  a=Math.max(0,a-pad); b=Math.min(d.length-1,b+pad);
+  if(b-a < buf.sampleRate*0.2) return buf;
+  const out=ac().createBuffer(buf.numberOfChannels,b-a,buf.sampleRate);
+  for(let c=0;c<buf.numberOfChannels;c++) out.getChannelData(c).set(buf.getChannelData(c).subarray(a,b));
+  return out;
+}
+function reverse(buf){
+  const out=ac().createBuffer(buf.numberOfChannels,buf.length,buf.sampleRate);
+  for(let c=0;c<buf.numberOfChannels;c++){ const s=buf.getChannelData(c), o=out.getChannelData(c), n=s.length;
+    for(let i=0;i<n;i++) o[i]=s[n-1-i]; }
+  return out;
+}
+function play(buf, rate=1, onEnd){
+  stopAudio(); const src=ac().createBufferSource(); src.buffer=buf; src.playbackRate.value=rate;
+  src.connect(ac().destination); src.onended=()=>{ if(curSrc===src){curSrc=null; onEnd&&onEnd();} }; src.start(); curSrc=src;
+}
+function drawWave(canvas, buf){
+  if(!canvas||!buf) return; const dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.clientWidth*dpr; canvas.height=canvas.clientHeight*dpr;
+  const g=canvas.getContext("2d"), w=canvas.width, h=canvas.height, d=buf.getChannelData(0), step=Math.ceil(d.length/w);
+  const grad=g.createLinearGradient(0,0,w,0); grad.addColorStop(0,"#ffd23f"); grad.addColorStop(.5,"#ff4fa3"); grad.addColorStop(1,"#3ee6ff");
+  g.fillStyle=grad;
+  let max=0.0001; for(let i=0;i<d.length;i+=50) max=Math.max(max,Math.abs(d[i]));
+  for(let x=0;x<w;x+=3*dpr){ let m=0; for(let j=0;j<step;j++){const v=Math.abs(d[x*step+j]||0); if(v>m)m=v;}
+    const bh=Math.max(2,(m/max)*h*0.9); g.fillRect(x,(h-bh)/2,2*dpr,bh); }
+}
+
+function micBlocked(useFile){
+  const m=$("#modal"); m.classList.remove("hidden");
+  m.innerHTML=`<div class="card center"><div class="big-ic">🎙️🚫</div><h2>El micrófono está bloqueado</h2>
+    <p class="mut">Aquí dentro de Claude el celular no deja grabar. Abre el juego desde su propio link (en Chrome o Safari) y el botón grabará directo.</p>
+    <p class="note">Si ya lo abriste en el navegador, revisa que le diste permiso al micrófono.</p>
+    <button class="full ghost mt" id="mFile">📁 Usar un audio ya grabado</button>
+    <button class="full cyan mt" id="mOk">Entendido</button></div>`;
+  $("#mOk").onclick=()=>m.classList.add("hidden");
+  $("#mFile").onclick=()=>{ m.classList.add("hidden"); useFile(); };
+}
+function save(){ try{ localStorage.setItem("alreves",JSON.stringify({teams:S.teams,score:S.score,turn:S.turn,goal:S.goal,timeLimit:S.timeLimit,cats:S.cats})); }catch(e){} }
+function load(){ try{ return JSON.parse(localStorage.getItem("alreves")||"null"); }catch(e){ return null; } }
+function clearSave(){ try{ localStorage.removeItem("alreves"); }catch(e){} }
+
+/* Records with mic if possible, otherwise opens the phone's recorder (file input). Calls done(AudioBuffer). */
+function bindRecorder(btn, done){
+  let live=false, pending=null;
+  const start=async(e)=>{
+    e.preventDefault(); ac(); stopAudio();
+    if(live) return;
+    try{
+      if(!stream) stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+    }catch(err){ return micBlocked(useFile); }
+    chunks=[]; recorder=new MediaRecorder(stream);
+    recorder.ondataavailable=ev=>ev.data.size&&chunks.push(ev.data);
+    recorder.onstop=async()=>{ const blob=new Blob(chunks,{type:recorder.mimeType}); decode(blob); };
+    recorder.start(); live=true; btn.classList.add("live"); btn.querySelector(".lb").textContent="Suelta para parar";
+    if(navigator.vibrate) navigator.vibrate(30);
+  };
+  const stop=e=>{ e&&e.preventDefault(); if(!live) return; live=false; btn.classList.remove("live");
+    btn.querySelector(".lb").textContent="Mantén presionado"; recorder.stop(); };
+  const useFile=()=>{
+    const fi=$("#fileIn"); fi.value="";
+    fi.onchange=()=>{ if(fi.files[0]) decode(fi.files[0]); };
+    fi.click();
+  };
+  const decode=async(blob)=>{
+    try{ const ab=await blob.arrayBuffer(); const buf=await ac().decodeAudioData(ab); done(trim(buf)); }
+    catch(err){ toast("No pude leer el audio, intenta otra vez"); }
+  };
+  btn.addEventListener("pointerdown",start);
+  btn.addEventListener("pointerup",stop);
+  btn.addEventListener("pointerleave",stop);
+  btn.addEventListener("pointercancel",stop);
+}
+
+/* ---------- screens ---------- */
+function scoreBar(highlight){
+  return `<div class="score">${S.teams.map((t,i)=>`<div class="${i===highlight?'on':''}"><i style="background:${COLORS[i]}"></i><span>${esc(t)}</span><b>${S.score[i]}</b></div>`).join("")}</div>`;
+}
+function catName(){ return CATS[S.cat]?CATS[S.cat].n:"✏️ Inventada"; }
+function tn(i){ return `<span style="color:${COLORS[i]}">${esc(S.teams[i])}</span>`; }
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function home(){
+  app.innerHTML=`
+    <h1 class="logo"><span class="w1">¡AL</span><span class="w2">R<span class="c">E</span>V<span class="c">É</span>S!</span></h1>
+    <p class="sub">Di una frase… ¡que tus amigos la adivinen al revés!</p>
+    <div class="card">
+      <label>Equipos (${S.teams.length}/6)</label>
+      <div id="teams">${S.teams.map((t,i)=>`<div class="team-row"><span class="dot" style="background:${COLORS[i]}"></span>
+        <input type="text" data-i="${i}" value="${esc(t)}" maxlength="16">
+        <button class="ghost small" data-del="${i}" ${S.teams.length<=2?"disabled":""}>✕</button></div>`).join("")}</div>
+      <button class="ghost small full" id="addT" ${S.teams.length>=6?"disabled":""}>➕ Agregar equipo</button>
+    </div>
+    <div class="card">
+      <label>Categorías de frases</label>
+      <div class="cats" id="cats">${Object.entries(CATS).map(([k,c])=>`<button data-k="${k}" class="${S.cats.includes(k)?'on':''}">${c.n}</button>`).join("")}</div>
+      <button class="ghost small full mt" id="allC">Todas / ninguna</button>
+    </div>
+    <div class="card">
+      <label>Se gana con</label>
+      <div class="seg" id="goal">${[5,10,15].map(n=>`<button data-v="${n}" class="${S.goal===n?'on':''}">${n} pts</button>`).join("")}</div>
+      <label class="mt">Tiempo para adivinar</label>
+      <div class="seg" id="time">${[[30,"30 s"],[60,"60 s"],[0,"Sin límite"]].map(([v,l])=>`<button data-v="${v}" class="${S.timeLimit===v?'on':''}">${l}</button>`).join("")}</div>
+    </div>
+    ${load()?`<button class="full green" id="cont">▶️ Continuar partida</button><div class="mt"></div>`:""}
+    <button class="full pink" id="go">¡A jugar! 🎉</button>
+    <div class="card mt">
+      <h2>¿Cómo se juega?</h2>
+      <ol>
+        <li>Un equipo graba una frase (sin que el otro la vea).</li>
+        <li>El celular la voltea y el otro equipo la escucha <b>al revés</b>.</li>
+        <li>Truco: graben cómo suena al revés y vuelvan a voltearlo… ¡se escucha casi normal!</li>
+        <li>Digan la frase en voz alta. Si aciertan, ganan puntos.</li>
+      </ol>
+    </div>`;
+  ["goal","time"].forEach(id=>$("#"+id).onclick=e=>{const b=e.target.closest("button"); if(!b)return;
+    $("#"+id).querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+    if(id==="goal")S.goal=+b.dataset.v; else S.timeLimit=+b.dataset.v;});
+  const readTeams=()=>{ S.teams=[...document.querySelectorAll("#teams input")].map((x,i)=>x.value.trim()||`Equipo ${i+1}`); };
+  $("#teams").onclick=e=>{ const b=e.target.closest("[data-del]"); if(!b||b.disabled) return; readTeams(); S.teams.splice(+b.dataset.del,1); home(); };
+  $("#addT").onclick=()=>{ readTeams(); if(S.teams.length<6){ S.teams.push(`Equipo ${S.teams.length+1}`); home(); } };
+  $("#cats").onclick=e=>{ const b=e.target.closest("button"); if(!b) return; readTeams(); const k=b.dataset.k;
+    S.cats=S.cats.includes(k)?S.cats.filter(x=>x!==k):[...S.cats,k]; b.classList.toggle("on"); };
+  $("#allC").onclick=()=>{ S.cats=S.cats.length===Object.keys(CATS).length?[]:Object.keys(CATS);
+    $("#cats").querySelectorAll("button").forEach(b=>b.classList.toggle("on",S.cats.includes(b.dataset.k))); };
+  if($("#cont")) $("#cont").onclick=()=>{ ac(); Object.assign(S,load()); pickPhrase(); };
+  $("#go").onclick=()=>{ ac(); readTeams();
+    if(!S.cats.length) return toast("Escoge al menos una categoría");
+    S.score=S.teams.map(()=>0); S.turn=0; pickPhrase(); };
+}
+
+function pickPhrase(){
+  save(); randPhrase(); S.rawBuf=S.revBuf=S.imitBuf=null; S.listens=0;
+  app.innerHTML=`
+    ${scoreBar(S.turn)}
+    <h2>Turno de ${tn(S.turn)}</h2>
+    <p class="center mut">🙈 Que <b>${tn(guesser())}</b> no mire la pantalla</p>
+    <div class="card">
+      <label>Tu frase secreta</label>
+      <span class="chip catTag" id="ct">${CATS[S.cat].n}</span>
+      <div class="phrase" id="ph">${esc(S.phrase)}</div>
+      <div class="row"><button class="ghost small" id="other">🎲 Otra</button><button class="ghost small" id="own">✏️ Escribir la mía</button></div>
+      <input type="text" id="ownIn" class="hidden mt" placeholder="Escribe tu frase…" maxlength="60">
+    </div>
+    <button class="full cyan" id="next">Ya la tengo → Grabar</button>`;
+  $("#other").onclick=()=>{ randPhrase(); $("#ph").textContent=S.phrase; $("#ct").textContent=CATS[S.cat].n; };
+  $("#own").onclick=()=>{ const i=$("#ownIn"); i.classList.remove("hidden"); i.focus(); };
+  $("#ownIn").oninput=e=>{ if(e.target.value.trim()){S.phrase=e.target.value.trim(); $("#ph").textContent=S.phrase; S.cat="own"; $("#ct").textContent=catName();} };
+  $("#next").onclick=recordScreen;
+}
+
+function recordScreen(){
+  app.innerHTML=`
+    ${scoreBar(S.turn)}
+    <h2>Graba la frase</h2>
+    <div class="card center">
+      <div class="phrase">"${esc(S.phrase)}"</div>
+      <div class="rec" id="rec"><div class="ic">🎙️</div><div class="lb">Mantén presionado</div></div>
+      <p class="note">Habla claro y despacio. Mantén presionado mientras hablas.</p>
+    </div>
+    <div class="card hidden" id="after">
+      <canvas id="wv"></canvas>
+      <div class="row mt"><button class="ghost small" id="pn">▶️ Normal</button><button class="ghost small" id="pr">⏪ Al revés</button></div>
+      <button class="full green mt" id="ok">Listo, pasar el celular 📱</button>
+    </div>`;
+  bindRecorder($("#rec"), buf=>{
+    S.rawBuf=buf; S.revBuf=reverse(buf); $("#after").classList.remove("hidden"); drawWave($("#wv"),S.revBuf);
+  });
+  $("#pn").onclick=()=>play(S.rawBuf); $("#pr").onclick=()=>play(S.revBuf);
+  $("#ok").onclick=()=>{ stopAudio(); handoff(); };
+}
+
+function handoff(){
+  app.innerHTML=`
+    ${scoreBar(guesser())}
+    <div class="card center" style="margin-top:40px">
+      <div class="big-ic">📱➡️</div>
+      <h2>Pásale el celular a<br>${tn(guesser())}</h2>
+      <span class="chip">Categoría: ${catName()}</span>
+      <p class="mut">Tienen que descubrir la frase escuchándola al revés.</p>
+    </div>
+    <button class="full pink" id="ready">¡Estamos listos!</button>`;
+  $("#ready").onclick=guessScreen;
+}
+
+function guessScreen(){
+  let left=S.timeLimit;
+  app.innerHTML=`
+    ${scoreBar(guesser())}
+    ${S.timeLimit?`<div class="timer" id="tm">${left}</div>`:""}
+    <div class="card">
+      <label>1. Escuchen la frase al revés</label>
+      <canvas id="wv"></canvas>
+      <button class="full pink mt" id="pr">⏪ Reproducir al revés</button>
+      <div class="seg mt" id="spd">${[[0.75,"🐢 Lento"],[1,"Normal"]].map(([v,l])=>`<button data-v="${v}" class="${S.rate===v?'on':''}">${l}</button>`).join("")}</div>
+      <p class="note center" id="cnt">Escuchado 0 veces</p>
+    </div>
+    <div class="card center">
+      <label>2. Truco: imiten lo que oyeron 🦜</label>
+      <div class="rec" id="rec" style="width:120px;height:120px"><div class="ic" style="font-size:38px">🎙️</div><div class="lb" style="font-size:13px">Mantén presionado</div></div>
+      <button class="full cyan hidden" id="pi">🔁 Escuchar mi imitación al derecho</button>
+      <p class="note">Graben cómo suena al revés y la app lo voltea. ¡Les dará una pista!</p>
+    </div>
+    <button class="full green" id="rv">3. ¡Ya sabemos! Revelar 👀</button>`;
+  drawWave($("#wv"),S.revBuf);
+  $("#pr").onclick=()=>{ play(S.revBuf,S.rate); S.listens++; $("#cnt").textContent=`Escuchado ${S.listens} ${S.listens===1?"vez":"veces"}`; };
+  $("#spd").onclick=e=>{const b=e.target.closest("button"); if(!b)return; $("#spd").querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); S.rate=+b.dataset.v;};
+  bindRecorder($("#rec"), buf=>{ S.imitBuf=reverse(buf); $("#pi").classList.remove("hidden"); play(S.imitBuf); });
+  $("#pi").onclick=()=>S.imitBuf&&play(S.imitBuf);
+  $("#rv").onclick=()=>{ clearInterval(timerId); stopAudio(); reveal(false); };
+  clearInterval(timerId);
+  if(S.timeLimit){
+    timerId=setInterval(()=>{ left--; const t=$("#tm"); if(!t){clearInterval(timerId);return;}
+      t.textContent=left; t.classList.toggle("low",left<=10);
+      if(left<=10&&left>0&&navigator.vibrate) navigator.vibrate(20);
+      if(left<=0){ clearInterval(timerId); stopAudio(); reveal(true); } },1000);
+  }
+}
+
+function reveal(timeout){
+  const pts = S.listens<=1?3:S.listens<=3?2:1;
+  app.innerHTML=`
+    ${scoreBar(guesser())}
+    <div class="card center">
+      ${timeout?`<div class="big-ic">⏰</div><h2>¡Se acabó el tiempo!</h2>`:`<h2>La frase era…</h2>`}
+      <div class="phrase" style="color:var(--yellow)">"${esc(S.phrase)}"</div>
+      <div class="row"><button class="ghost small" id="pn">▶️ Normal</button><button class="ghost small" id="pr">⏪ Al revés</button></div>
+    </div>
+    <div class="card center">
+      <p style="margin-top:0"><b>${tn(S.turn)}</b>, ¿${tn(guesser())} la dijo bien?</p>
+      <span class="chip">Escucharon ${S.listens} ${S.listens===1?"vez":"veces"} → valen ${pts} pts</span>
+      <div class="row mt">
+        <button class="green" id="yes">✅ ¡Sí!</button>
+        <button class="ghost" id="half">🤏 Casi (1)</button>
+        <button class="red" id="no">❌ No</button>
+      </div>
+    </div>`;
+  $("#pn").onclick=()=>play(S.rawBuf); $("#pr").onclick=()=>play(S.revBuf);
+  const fin=p=>{ stopAudio(); S.score[guesser()]+=p; if(p) toast(`+${p} para ${S.teams[guesser()]}`);
+    if(S.score[guesser()]>=S.goal) return winner(guesser());
+    S.turn=guesser(); pickPhrase(); };
+  $("#yes").onclick=()=>fin(pts); $("#half").onclick=()=>fin(1); $("#no").onclick=()=>fin(0);
+}
+
+function winner(i){
+  clearSave();
+  app.innerHTML=`
+    <div class="card center" style="margin-top:40px">
+      <div class="big-ic">🏆</div>
+      <h2 style="font-size:30px">¡${tn(i)} gana!</h2>
+      <p class="mut">${S.teams.map((t,j)=>`${esc(t)}: ${S.score[j]}`).join(" · ")}</p>
+    </div>
+    <button class="full pink" id="again">Jugar otra vez 🔄</button>
+    <button class="full ghost mt" id="menu">Menú</button>`;
+  if(navigator.vibrate) navigator.vibrate([80,60,80,60,200]);
+  $("#again").onclick=()=>{S.score=S.teams.map(()=>0);S.turn=0;pickPhrase();};
+  $("#menu").onclick=home;
+}
+
+home();
+</script>
+</body>
+</html>
